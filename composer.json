@@ -1,7 +1,7 @@
 {
-    "name": "jfusion/plugin-joomla_int",
-    "type": "jfusion-plugin-joomla_int",
-    "description": "Plugin for joomla_int jfusion framework",
+    "name": "jfusion/plugin-joomla-int",
+    "type": "jfusion-plugin-joomla-int",
+    "description": "Plugin for joomla-int jfusion framework",
     "keywords": ["jfusion", "plugin", "joomla_int", "framework"],
     "homepage": "https://github.com/jfusion/org.jfusion.plugin.joomla_int",
     "license": "GPL-2.0+",
