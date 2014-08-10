@@ -1,0 +1,20 @@
+{
+    "name": "jfusion/plugin-joomla_int",
+    "type": "jfusion-plugin-joomla_int",
+    "description": "Plugin for joomla_int jfusion framework",
+    "keywords": ["jfusion", "plugin", "joomla_int", "framework"],
+    "homepage": "https://github.com/jfusion/org.jfusion.plugin.joomla_int",
+    "license": "GPL-2.0+",
+    "require": {
+        "php": ">=5.3.10"
+    },
+    "require-dev": {
+        "jfusion/framework": "~1",
+        "jfusion/platform-joomla": "~1"
+    },
+    "autoload": {
+        "psr-4": {
+            "JFusion\\Plugins\\joomla_int\\": "."
+        }
+    }
+}
