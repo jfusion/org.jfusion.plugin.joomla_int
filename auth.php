@@ -11,7 +11,6 @@
 
 use JFusion\Factory;
 use JFusion\Framework;
-use JFusion\Plugin\Plugin_Auth;
 use JFusion\User\Userinfo;
 
 use JUserHelper;
@@ -28,7 +27,7 @@ use JUserHelper;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link       http://www.jfusion.org
  */
-class Auth extends Plugin_Auth
+class Auth extends \JFusion\Plugin\Auth
 {
 	/**
 	 * Generates an encrypted password based on the userinfo passed to this function
