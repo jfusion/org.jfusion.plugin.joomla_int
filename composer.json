@@ -1,10 +1,18 @@
 {
     "name": "jfusion/plugin-joomla-int",
-    "type": "jfusion-plugin-joomla-int",
+    "type": "jfusion-plugin",
     "description": "Plugin for joomla-int jfusion framework",
-    "keywords": ["jfusion", "plugin", "joomla_int", "framework"],
-    "homepage": "https://github.com/jfusion/org.jfusion.plugin.joomla_int",
+    "keywords": ["jfusion", "plugin", "joomla_int"],
+    "homepage": "http://jfusion.org",
     "license": "GPL-2.0+",
+    "authors": [
+        {
+            "name": "Morten Hundevad",
+            "email": "fannoj@gmail.com",
+            "homepage": "http://fanno.dk",
+            "role": "Developer"
+        }
+    ],
     "require": {
         "php": ">=5.3.10"
     },
