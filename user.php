@@ -28,7 +28,6 @@ use \RuntimeException;
 use \stdClass;
 
 //require the standard joomla user functions
-jimport('joomla.user.helper');
 
 /**
  * JFusion User Class for the internal Joomla database
@@ -413,7 +412,6 @@ class User extends \JFusion\Plugin\User
         if (!empty($userinfo->block) || !empty($userinfo->activation)) {
             $status[LogLevel::ERROR][] = Text::_('FUSION_BLOCKED_USER');
         } else {
-	        jimport('joomla.user.helper');
 	        $instance = JUser::getInstance();
 
 	        // If _getUser returned an error, then pass it back.
@@ -527,9 +525,8 @@ class User extends \JFusion\Plugin\User
 			$db = Factory::getDatabase($this->getJname());
 			$dispatcher = JEventDispatcher::getInstance();
 
-			jimport('joomla.user.helper');
-
 			if ($this->fireUserPlugins) {
+				jimport('joomla.user.helper');
 				// Get the old user
 				$old = new JUser($existinguser->userid);
 				//Fire the onBeforeStoreUser event.
@@ -593,28 +590,24 @@ class User extends \JFusion\Plugin\User
 	 */
 	public function updatePassword(Userinfo $userinfo, Userinfo &$existinguser)
 	{
-		if (strlen($userinfo->password_clear) > 55) {
-			throw new Exception(Text::_('JLIB_USER_ERROR_PASSWORD_TOO_LONG'));
-		} else {
-			/**
-			 * @ignore
-			 * @var $auth Auth
-			 */
-			$auth = Factory::getAuth($this->getJname());
-			$password = $auth->hashPassword($userinfo);
+		/**
+		 * @ignore
+		 * @var $auth Auth
+		 */
+		$auth = Factory::getAuth($this->getJname());
+		$password = $auth->hashPassword($userinfo);
 
-			$db = Factory::getDatabase($this->getJname());
+		$db = Factory::getDatabase($this->getJname());
 
-			$query = $db->getQuery(true)
-				->update('#__users')
-				->set('password = ' . $db->quote($password))
-				->where('id = ' . $db->quote($existinguser->userid));
+		$query = $db->getQuery(true)
+			->update('#__users')
+			->set('password = ' . $db->quote($password))
+			->where('id = ' . $db->quote($existinguser->userid));
 
-			$db->setQuery($query);
-			$db->execute();
+		$db->setQuery($query);
+		$db->execute();
 
-			$this->debugger->addDebug(Text::_('PASSWORD_UPDATE')  . ': ' . substr($password, 0, 6) . '********');
-		}
+		$this->debugger->addDebug(Text::_('PASSWORD_UPDATE')  . ': ' . substr($password, 0, 6) . '********');
 	}
 
 	/**
