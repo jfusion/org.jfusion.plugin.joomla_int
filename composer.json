@@ -23,7 +23,7 @@
     },
     "autoload": {
         "psr-4": {
-            "JFusion\\Plugins\\joomla_int\\": "."
+            "JFusion\\Plugins\\joomla_int\\": "src/"
         }
     }
 }
