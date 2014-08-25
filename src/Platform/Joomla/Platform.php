@@ -101,7 +101,7 @@ class Platform extends Joomla
 				$query = $db->getQuery(true)
 					->select('avatar')
 					->from('#__comprofiler')
-					->where('user_id = ' . $userid);
+					->where('user_id = ' . (int)$userid);
 
 				$db->setQuery($query);
 				$result = $db->loadResult();
@@ -115,7 +115,7 @@ class Platform extends Joomla
 					$query = $db->getQuery(true)
 						->select('avatar')
 						->from('#__community_users')
-						->where('userid = ' . $userid);
+						->where('userid = ' . (int)$userid);
 
 					$db->setQuery($query);
 					$result = $db->loadResult();
@@ -128,7 +128,7 @@ class Platform extends Joomla
 					$query = $db->getQuery(true)
 						->select('user_picture')
 						->from('#__joom_users')
-						->where('user_id = ' . $userid);
+						->where('user_id = ' . (int)$userid);
 
 					$db->setQuery($query);
 					$result = $db->loadResult();
@@ -162,7 +162,7 @@ class Platform extends Joomla
 			$usergroups = implode(',', $usergroups);
 
 			$query->innerJoin('#__user_usergroup_map AS g ON u.id = g.user_id')
-				->where('g.group_id IN (' . $usergroups . ')');
+				->where('g.group_id IN (' . $db->quote($usergroups) . ')');
 		}
 
 		$query->where('s.client_id = 0')

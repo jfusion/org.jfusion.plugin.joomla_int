@@ -130,7 +130,7 @@ class Admin extends \JFusion\Plugin\Admin
 				$query = $db->getQuery(true)
 					->select('title')
 					->from('#__usergroups')
-					->where('id = ' . $usergroup);
+					->where('id = ' . (int)$usergroup);
 
 				$db->setQuery($query);
 				$group[] = $db->loadResult();
@@ -175,7 +175,7 @@ class Admin extends \JFusion\Plugin\Admin
 			$query = $db->getQuery(true)
 				->select('title')
 				->from('#__usergroups')
-				->where('id = ' . $gid);
+				->where('id = ' . (int)$gid);
 
 			$db->setQuery($query);
 			$group = $db->loadResult();

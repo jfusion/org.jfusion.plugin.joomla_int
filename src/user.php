@@ -9,6 +9,7 @@
  * @link       http://www.jfusion.org
  */
 
+use JFusion\Application\Application;
 use JFusion\Factory;
 use JFusion\Framework;
 use JFusion\User\Userinfo;
@@ -63,7 +64,7 @@ class User extends \JFusion\Plugin\User
 			$query = $db->getQuery(true)
 				->select('id as userid, activation, username, name, password, email, block, params')
 				->from('#__users')
-				->where($identifier_type . ' = ' . $db->quote($identifier));
+				->where($db->quoteName($identifier_type) . ' = ' . $db->quote($identifier));
 
 			$db->setQuery($query);
 			$result = $db->loadObject();
@@ -131,7 +132,7 @@ class User extends \JFusion\Plugin\User
 					$query = $db->getQuery(true)
 						->select('confirmed, approved, cbactivation')
 						->from('#__comprofiler')
-						->where('user_id = ' . $result->userid);
+						->where('user_id = ' . (int)$result->userid);
 
 					$db->setQuery($query);
 					$cbresult = $db->loadObject();
@@ -233,7 +234,7 @@ class User extends \JFusion\Plugin\User
 				$query = $db->getQuery(true)
 					->select('id')
 					->from('#__users')
-					->where('username=' . $db->quote($username_clean));
+					->where('username = ' . $db->quote($username_clean));
 
 				$db->setQuery($query);
 				while ($db->loadResult()) {
@@ -241,7 +242,7 @@ class User extends \JFusion\Plugin\User
 					$query = $db->getQuery(true)
 						->select('id')
 						->from('#__users')
-						->where('username=' . $db->quote($username_clean));
+						->where('username = ' . $db->quote($username_clean));
 
 					$db->setQuery($query);
 				}
@@ -481,7 +482,7 @@ class User extends \JFusion\Plugin\User
      */
     function destroySession(Userinfo $userinfo, $options) {
 	    if (!isset($options['clientid'])) {
-		    $mainframe = Factory::getApplication();
+		    $mainframe = Application::getInstance();
 		    if ($mainframe->isAdmin()) {
 		        $options['clientid'] = array(1);
 		    } else {
