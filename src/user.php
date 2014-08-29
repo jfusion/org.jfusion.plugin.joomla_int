@@ -353,52 +353,28 @@ class User extends \JFusion\Plugin\User
 
 	    $query = $db->getQuery(true)
 		    ->select('id')
-		    ->from('#__jfusion_users')
-		    ->where('username = ' . $db->quote($userinfo->username), 'OR')
-		    ->where('LOWER(username) = ' . $db->quote(strtolower($userinfo->email)));
+		    ->from('#__users')
+		    ->where('username  = ' . $db->quote($userinfo->username));
 
-        $db->setQuery($query);
-        $userid = $db->loadResult();
+	    $db->setQuery($query);
+	    $userid = $db->loadResult();
 	    if ($userid) {
-            //this user was created by JFusion and we need to delete them from the joomla user and jfusion lookup table
-            $user = JUser::getInstance($userid);
-            $user->delete();
+		    //just in case
+		    $query = $db->getQuery(true)
+			    ->delete('#__jfusion_users_plugin')
+			    ->where('id = ' . (int)$userid);
 
-	        $query = $db->getQuery(true)
-		        ->delete('#__jfusion_users_plugin')
-		        ->where('id = ' . (int)$userid);
+		    $db->setQuery($query);
+		    $db->execute();
+		    //delete it from the Joomla usertable
+		    $user = JUser::getInstance($userid);
+		    $user->delete();
 
-            $db->setQuery($query);
-            $db->execute();
 		    $deleted = true;
-        } else {
-            //this user was NOT create by JFusion. Therefore we need to delete it in the Joomla user table only
-
-	        $query = $db->getQuery(true)
-		        ->select('id')
-		        ->from('#__users')
-		        ->where('username  = ' . $db->quote($userinfo->username));
-
-            $db->setQuery($query);
-            $userid = $db->loadResult();
-            if ($userid) {
-                //just in case
-	            $query = $db->getQuery(true)
-		            ->delete('#__jfusion_users_plugin')
-		            ->where('id = ' . (int)$userid);
-
-	            $db->setQuery($query);
-                $db->execute();
-                //delete it from the Joomla usertable
-                $user = JUser::getInstance($userid);
-                $user->delete();
-
-	            $deleted = true;
-            } else {
-                //could not find user and return an error
-	            throw new RuntimeException($userinfo->username);
-            }
-        }
+	    } else {
+		    //could not find user and return an error
+		    throw new RuntimeException($userinfo->username);
+	    }
         return $deleted;
     }
 
