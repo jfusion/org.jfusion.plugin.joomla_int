@@ -244,7 +244,7 @@ class User extends \JFusion\Plugin\User
 				$this->debugger->addDebug(Text::_('USERNAME') . ': ' . $userinfo->username . ' ' . Text::_('FILTERED_USERNAME') . ': ' . $username_clean);
 
 				//create a Joomla password hash if password_clear is available
-				$userinfo->password_salt = Framework::genRandomPassword(32);
+				$userinfo->password_salt = $this->genRandomPassword(32);
 				if (!empty($userinfo->password_clear)) {
 					/**
 					 * @ignore

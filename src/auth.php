@@ -116,7 +116,7 @@ class Auth extends \JFusion\Plugin\Auth
 		if ($this->helper->hasFile('libraries/phpass/PasswordHash.php')) {
 			$password = $this->helper->hashPassword($userinfo->password_clear);
 		} else {
-			$salt = Framework::genRandomPassword(32);
+			$salt = $this->genRandomPassword(32);
 			$password = $this->helper->getCryptedPassword($userinfo->password_clear, $salt, 'md5-hex') . ':' . $salt;
 		}
 		return $password;

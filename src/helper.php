@@ -266,40 +266,6 @@ class Helper extends Plugin
 	}
 
 	/**
-	 * Generate a random password
-	 *
-	 * @param   integer  $length  Length of the password to generate
-	 *
-	 * @return  string  Random Password
-	 *
-	 * @since   11.1
-	 */
-	public function genRandomPassword($length = 8)
-	{
-		$salt = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-		$base = strlen($salt);
-		$makepass = '';
-
-		/*
-		 * Start with a cryptographic strength random string, then convert it to
-		 * a string with the numeric base of the salt.
-		 * Shift the base conversion on each character so the character
-		 * distribution is even, and randomize the start shift so it's not
-		 * predictable.
-		 */
-		$random = Framework::genRandomBytes($length + 1);
-		$shift = ord($random[0]);
-
-		for ($i = 1; $i <= $length; ++$i)
-		{
-			$makepass .= $salt[($shift + ord($random[$i])) % $base];
-			$shift += ord($random[$i]);
-		}
-
-		return $makepass;
-	}
-
-	/**
 	 * Hashes a password using the current encryption.
 	 *
 	 * @param   string  $password  The plaintext password to encrypt.
