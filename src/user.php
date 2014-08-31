@@ -373,75 +373,69 @@ class User extends \JFusion\Plugin\User
         return $deleted;
     }
 
-    /**
-     * @param Userinfo $userinfo
-     * @param array $options
-     *
-     * @return array
-     */
+	/**
+	 * @param Userinfo $userinfo
+	 * @param array    $options
+	 *
+	 * @throws \RuntimeException
+	 * @return array
+	 */
     function createSession(Userinfo $userinfo, $options) {
         $status = array(LogLevel::ERROR => array(), LogLevel::DEBUG => array());
-        if (!empty($userinfo->block) || !empty($userinfo->activation)) {
-            $status[LogLevel::ERROR][] = Text::_('FUSION_BLOCKED_USER');
-        } else {
-	        $instance = JUser::getInstance();
 
-	        // If _getUser returned an error, then pass it back.
-	        if (!$instance->load($userinfo->userid)) {
-		        $status[LogLevel::ERROR][] = Text::_('FUSION_ERROR_LOADING_USER');
-	        } else {
-		        // If the user is blocked, redirect with an error
-		        if ($instance->get('block') == 1) {
-			        $status[LogLevel::ERROR][] = Text::_('JERROR_NOLOGIN_BLOCKED');
-		        } else {
-			        // Authorise the user based on the group information
-			        if (!isset($options['group'])) {
-				        $options['group'] = 'USERS';
-			        }
+	    $instance = JUser::getInstance();
 
-			        if (!isset($options['action'])) {
-				        $options['action'] = 'core.login.site';
-			        }
+	    // If _getUser returned an error, then pass it back.
+	    if (!$instance->load($userinfo->userid)) {
+		    throw new RuntimeException(Text::_('FUSION_ERROR_LOADING_USER'));
+	    } else {
+		    // If the user is blocked, redirect with an error
+		    if ($instance->get('block') == 1) {
+			    throw new RuntimeException(Text::_('JERROR_NOLOGIN_BLOCKED'));
+		    } else {
+			    // Authorise the user based on the group information
+			    if (!isset($options['group'])) {
+				    $options['group'] = 'USERS';
+			    }
 
-			        // Check the user can login.
-			        $result	= $instance->authorise($options['action']);
-			        if (!$result) {
-				        $status[LogLevel::ERROR][] = Text::_('JERROR_LOGIN_DENIED');
-			        } else {
-				        // Mark the user as logged in
-				        $instance->set('guest', 0);
+			    if (!isset($options['action'])) {
+				    $options['action'] = 'core.login.site';
+			    }
 
-				        // Register the needed session variables
-				        $session = JFactory::getSession();
-				        $session->set('user', $instance);
+			    // Check the user can login.
+			    $result	= $instance->authorise($options['action']);
+			    if (!$result) {
+				    throw new RuntimeException(Text::_('JERROR_LOGIN_DENIED'));
+			    } else {
+				    // Mark the user as logged in
+				    $instance->set('guest', 0);
 
-				        // Update the user related fields for the Joomla sessions table.
-				        try {
-					        $db = Factory::getDBO();
+				    // Register the needed session variables
+				    $session = JFactory::getSession();
+				    $session->set('user', $instance);
 
-					        $query = $db->getQuery(true)
-						        ->update('#__session')
-						        ->set('guest = ' . $db->quote($instance->get('guest')))
-						        ->set('username = ' . $db->quote($instance->get('username')))
-						        ->set('userid = ' . $db->quote($instance->get('id')))
-						        ->where('session_id = ' . $db->quote($session->getId()));
+				    // Update the user related fields for the Joomla sessions table.
+				    $db = Factory::getDBO();
 
-					        $db->setQuery($query);
-					        $db->execute();
+				    $query = $db->getQuery(true)
+					    ->update('#__session')
+					    ->set('guest = ' . $db->quote($instance->get('guest')))
+					    ->set('username = ' . $db->quote($instance->get('username')))
+					    ->set('userid = ' . $db->quote($instance->get('id')))
+					    ->where('session_id = ' . $db->quote($session->getId()));
 
-					        // Hit the user last visit field
-					        if ($instance->setLastVisit()) {
-						        $status[LogLevel::DEBUG][] = 'Joomla session created';
-					        } else {
-						        $status[LogLevel::ERROR][] = 'Error Joomla session created';
-					        }
-				        } catch (Exception $e) {
-					        $status[LogLevel::ERROR][] = $e->getMessage();
-				        }
-			        }
-		        }
-	        }
-        }
+				    $db->setQuery($query);
+				    $db->execute();
+
+				    // Hit the user last visit field
+				    if ($instance->setLastVisit()) {
+					    $status[LogLevel::DEBUG][] = 'Joomla session created';
+				    } else {
+					    throw new RuntimeException('Error Joomla session created');
+				    }
+			    }
+		    }
+	    }
         return $status;
     }
 
