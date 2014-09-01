@@ -448,6 +448,9 @@ class User extends \JFusion\Plugin\User
     function destroySession(Userinfo $userinfo, $options) {
 	    if (!isset($options['clientid'])) {
 		    $mainframe = Application::getInstance();
+		    /**
+		     * TODO: NEED TO CHANGE THIS.
+		     */
 		    if ($mainframe->isAdmin()) {
 		        $options['clientid'] = array(1);
 		    } else {

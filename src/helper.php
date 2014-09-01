@@ -13,6 +13,7 @@
 use Hautelook\Phpass\PasswordHash;
 use JFusion\Framework;
 use JFusion\Plugin\Plugin;
+use Joomla\Crypt\Crypt;
 
 /**
  * JFusion Helper Class for joomla_ext
@@ -195,7 +196,7 @@ class Helper extends Plugin
 				}
 				else
 				{
-					return '$1$' . substr(md5(Framework::genRandomBytes()), 0, 8) . '$';
+					return '$1$' . substr(md5(Crypt::genRandomBytes()), 0, 8) . '$';
 				}
 				break;
 
@@ -206,7 +207,7 @@ class Helper extends Plugin
 				}
 				else
 				{
-					return '$2$' . substr(md5(Framework::genRandomBytes()), 0, 12) . '$';
+					return '$2$' . substr(md5(Crypt::genRandomBytes()), 0, 12) . '$';
 				}
 				break;
 
@@ -217,7 +218,7 @@ class Helper extends Plugin
 				}
 				else
 				{
-					return mhash_keygen_s2k(MHASH_SHA1, $plaintext, substr(pack('h*', md5(Framework::genRandomBytes())), 0, 8), 4);
+					return mhash_keygen_s2k(MHASH_SHA1, $plaintext, substr(pack('h*', md5(Crypt::genRandomBytes())), 0, 8), 4);
 				}
 				break;
 
@@ -228,7 +229,7 @@ class Helper extends Plugin
 				}
 				else
 				{
-					return mhash_keygen_s2k(MHASH_MD5, $plaintext, substr(pack('h*', md5(Framework::genRandomBytes())), 0, 8), 4);
+					return mhash_keygen_s2k(MHASH_MD5, $plaintext, substr(pack('h*', md5(Crypt::genRandomBytes())), 0, 8), 4);
 				}
 				break;
 
