@@ -446,19 +446,9 @@ class User extends \JFusion\Plugin\User
      * @return array
      */
     function destroySession(Userinfo $userinfo, $options) {
-	    if (!isset($options['clientid'])) {
-		    $mainframe = Application::getInstance();
-		    /**
-		     * TODO: NEED TO CHANGE THIS.
-		     */
-		    if ($mainframe->isAdmin()) {
-		        $options['clientid'] = array(1);
-		    } else {
-		        $options['clientid'] = array(0);
-		    }
-		} elseif (!is_array($options['clientid'])) {
-		    //J1.6+ does not pass clientid as an array so let's fix that
-		    $options['clientid'] = array($options['clientid']);
+	    $clientid = array(0);
+	    if (isset($options['clientid'])) {
+		    $clientid = $options['clientid'];
 		}
 
 	    if ($userinfo->userid) {
@@ -471,7 +461,7 @@ class User extends \JFusion\Plugin\User
 		    }
 		    //destroy the Joomla session but do so directly based on what $options is
 		    $table = JTable::getInstance('session');
-		    $table->destroy($userinfo->userid, $options['clientid']);
+		    $table->destroy($userinfo->userid, $clientid);
 	    }
         return array();
     }
