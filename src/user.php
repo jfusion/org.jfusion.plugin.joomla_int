@@ -163,17 +163,15 @@ class User extends \JFusion\Plugin\User
 	{
 		//generate the filtered integration username
 		$db = Factory::getDatabase($this->getJname());
-		$username_clean = $this->filterUsername($userinfo->username);
-		$this->debugger->addDebug(Text::_('USERNAME') . ': ' . $userinfo->username . ' -> ' . Text::_('FILTERED_USERNAME') . ':' . $username_clean);
 
 		$query = $db->getQuery(true)
 			->update('#__users')
-			->set('username = ' . $db->quote($username_clean))
+			->set('username = ' . $db->quote($userinfo->username))
 			->where('id = ' . $db->quote($existinguser->userid));
 		$db->setQuery($query);
 		$db->execute();
 
-		$this->debugger->addDebug(Text::_('USERNAME_UPDATE') . ': ' . $username_clean);
+		$this->debugger->addDebug(Text::_('USERNAME') . ': ' . $existinguser->username . ' -> ' . $userinfo->username);
 	}
 
 	/**
@@ -222,27 +220,6 @@ class User extends \JFusion\Plugin\User
 			$db->setQuery($query);
 			$existinguser = $db->loadObject();
 			if (empty($existinguser)) {
-				//apply username filtering
-				$username_clean = $this->filterUsername($userinfo->username);
-				//now we need to make sure the username is unique in Joomla
-
-				$query = $db->getQuery(true)
-					->select('id')
-					->from('#__users')
-					->where('username = ' . $db->quote($username_clean));
-
-				$db->setQuery($query);
-				while ($db->loadResult()) {
-					$username_clean.= '_';
-					$query = $db->getQuery(true)
-						->select('id')
-						->from('#__users')
-						->where('username = ' . $db->quote($username_clean));
-
-					$db->setQuery($query);
-				}
-				$this->debugger->addDebug(Text::_('USERNAME') . ': ' . $userinfo->username . ' ' . Text::_('FILTERED_USERNAME') . ': ' . $username_clean);
-
 				//create a Joomla password hash if password_clear is available
 				$userinfo->password_salt = $this->genRandomPassword(32);
 				if (!empty($userinfo->password_clear)) {
@@ -260,7 +237,7 @@ class User extends \JFusion\Plugin\User
 
 				$instance = new JUser();
 				$instance->set('name', $userinfo->name);
-				$instance->set('username', $username_clean);
+				$instance->set('username', $userinfo->username);
 				$instance->set('password', $password);
 				$instance->set('email', $userinfo->email);
 				$instance->set('block', $userinfo->block);
@@ -693,6 +670,25 @@ class User extends \JFusion\Plugin\User
 			$username.= '_';
 		}
 		return $username;
+	}
+
+	/**
+	 * used to validate if a user can be created or not
+	 * should throw exception if user can't be created with info about the error.
+	 *
+	 * @param $userinfo
+	 *
+	 * @return boolean
+	 */
+	function validateUser(Userinfo $userinfo)
+	{
+		$username = $this->filterUsername($userinfo->username);
+		if (strlen($userinfo->username) < 2) {
+			throw new RuntimeException('username to short: ' . $userinfo->username);
+		} else if ($username !== $userinfo->username) {
+			throw new RuntimeException('Has Invalid Character: ' . $userinfo->username . ' vs ' . $username);
+		}
+		return true;
 	}
 
 	/**
