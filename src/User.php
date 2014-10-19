@@ -333,8 +333,9 @@ class User extends \JFusion\Plugin\User
 	    if ($userid) {
 		    //just in case
 		    $query = $db->getQuery(true)
-			    ->delete('#__jfusion_users_plugin')
-			    ->where('id = ' . (int)$userid);
+			    ->delete('#__jfusion_users')
+			    ->where('userid = ' . (int)$userid)
+			    ->where('jname = ' . $db->quote($this->getJname()));
 
 		    $db->setQuery($query);
 		    $db->execute();
