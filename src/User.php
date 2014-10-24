@@ -687,7 +687,7 @@ class User extends \JFusion\Plugin\User
 		if (strlen($userinfo->username) < 2) {
 			throw new RuntimeException('username to short: ' . $userinfo->username);
 		} else if ($username !== $userinfo->username) {
-			throw new RuntimeException('Has Invalid Character: ' . $userinfo->username . ' vs ' . $username);
+			throw new RuntimeException('Username Has Invalid Character: ' . $userinfo->username . ' vs ' . $username);
 		}
 		return true;
 	}
