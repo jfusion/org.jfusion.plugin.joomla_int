@@ -74,7 +74,7 @@ class User extends \JFusion\Plugin\User
 					->select('a.group_id, b.title as name')
 					->from('#__user_usergroup_map as a')
 					->innerJoin('#__usergroups as b ON a.group_id = b.id')
-					->where('a.user_id = ' . $db->quote($result->userid));
+					->where('a.user_id = ' . (int)$result->userid);
 
 				$db->setQuery($query);
 				$groupList = $db->loadObjectList();
@@ -167,7 +167,7 @@ class User extends \JFusion\Plugin\User
 		$query = $db->getQuery(true)
 			->update('#__users')
 			->set('username = ' . $db->quote($userinfo->username))
-			->where('id = ' . $db->quote($existinguser->userid));
+			->where('id = ' . (int)$existinguser->userid);
 		$db->setQuery($query);
 		$db->execute();
 
@@ -473,7 +473,7 @@ class User extends \JFusion\Plugin\User
 
 			$query = $db->getQuery(true)
 				->delete('#__user_usergroup_map')
-				->where('user_id = ' . $db->quote($existinguser->userid));
+				->where('user_id = ' . (int)$existinguser->userid);
 			$db->setQuery($query);
 			$db->execute();
 
@@ -508,7 +508,7 @@ class User extends \JFusion\Plugin\User
 		$query = $db->getQuery(true)
 			->update('#__users')
 			->set('email = ' . $db->quote($userinfo->email))
-			->where('id = ' . $db->quote($existinguser->userid));
+			->where('id = ' . (int)$existinguser->userid);
 
 		$db->setQuery($query);
 		$db->execute();
@@ -539,7 +539,7 @@ class User extends \JFusion\Plugin\User
 		$query = $db->getQuery(true)
 			->update('#__users')
 			->set('password = ' . $db->quote($password))
-			->where('id = ' . $db->quote($existinguser->userid));
+			->where('id = ' . (int)$existinguser->userid);
 
 		$db->setQuery($query);
 		$db->execute();
@@ -563,7 +563,7 @@ class User extends \JFusion\Plugin\User
 		$query = $db->getQuery(true)
 			->update('#__users')
 			->set('block = 1')
-			->where('id = ' . $db->quote($existinguser->userid));
+			->where('id = ' . (int)$existinguser->userid);
 
 		$db->setQuery($query);
 		$db->execute();
@@ -587,7 +587,7 @@ class User extends \JFusion\Plugin\User
 		$query = $db->getQuery(true)
 			->update('#__users')
 			->set('block = 0')
-			->where('id = ' . $db->quote($existinguser->userid));
+			->where('id = ' . (int)$existinguser->userid);
 
 		$db->setQuery($query);
 		$db->execute();
@@ -612,7 +612,7 @@ class User extends \JFusion\Plugin\User
 			->update('#__users')
 			->set('block = 0')
 			->set('activation = ' . $db->quote(''))
-			->where('id = ' . $db->quote($existinguser->userid));
+			->where('id = ' . (int)$existinguser->userid);
 
 		$db->setQuery($query);
 		$db->execute();
@@ -637,7 +637,7 @@ class User extends \JFusion\Plugin\User
 			->update('#__users')
 			->set('block = 1')
 			->set('activation = ' . $db->quote($userinfo->activation))
-			->where('id = ' . $db->quote($existinguser->userid));
+			->where('id = ' . (int)$existinguser->userid);
 
 		$db->setQuery($query);
 		$db->execute();
@@ -739,7 +739,7 @@ class User extends \JFusion\Plugin\User
 		$query = $db->getQuery(true)
 			->update('#__users')
 			->set('params = ' . $db->quote($params->toString()))
-			->where('id = ' . $db->quote($existinguser->userid));
+			->where('id = ' . (int)$existinguser->userid);
 
 		$db->setQuery($query);
 
